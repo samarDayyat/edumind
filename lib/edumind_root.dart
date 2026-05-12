@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+
+import 'home_screen.dart';
+import 'profile_screen.dart';
+
+class EduMindRoot extends StatefulWidget {
+  const EduMindRoot({super.key});
+
+  @override
+  State<EduMindRoot> createState() => _EduMindRootState();
+}
+
+class _EduMindRootState extends State<EduMindRoot> {
+  int _index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final cs = t.colorScheme;
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Subtle “purple rail” ambiance (works in RTL/LTR).
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    cs.primary.withValues(alpha: 0.08),
+                    cs.primary.withValues(alpha: 0.0),
+                  ],
+                  begin: AlignmentDirectional.centerStart,
+                  end: AlignmentDirectional.centerEnd,
+                ),
+              ),
+            ),
+          ),
+          IndexedStack(
+            index: _index,
+            children: const [HomeScreen(), ProfileScreen()],
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+        decoration: BoxDecoration(
+          color: cs.surface.withValues(alpha: 0.92),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: cs.shadow.withValues(alpha: 0.12),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
+          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.6)),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: NavigationBar(
+            selectedIndex: _index,
+            onDestinationSelected: (i) => setState(() => _index = i),
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home_rounded),
+                label: 'Home',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.person_outline_rounded),
+                selectedIcon: Icon(Icons.person_rounded),
+                label: 'Profile',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
