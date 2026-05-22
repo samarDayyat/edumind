@@ -1,3 +1,4 @@
+import 'package:edumind/about_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'game_screen.dart';
@@ -8,8 +9,8 @@ import 'widgets/pressable_scale.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // Static placeholder copy — no state or data layer.
-  static const String _username = 'Malaz';
+  // معلومات تجريبية ثابتة — بدون حالة أو طبقة بيانات حتى الآن.
+  static const String _username = 'ملاذ';
   static const int _xpCurrent = 320;
   static const int _xpGoal = 500;
 
@@ -19,6 +20,7 @@ class HomeScreen extends StatelessWidget {
     final cs = t.colorScheme;
     final xpFraction = _xpCurrent / _xpGoal;
 
+    // وجيهة مخصصة للأزرار الشبكية (الدروس، التحديات...)
     Widget tile({
       required String title,
       required String subtitle,
@@ -39,7 +41,7 @@ class HomeScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(26),
             boxShadow: [
               BoxShadow(
-                color: cs.shadow.withValues(alpha: 0.14),
+                color: colors.last.withValues(alpha: 0.3),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
@@ -49,13 +51,22 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.18),
-                  borderRadius: BorderRadius.circular(18),
+              // أيقونة تتوهج بنبض لطيف ومستمر
+              TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 0.9, end: 1.1),
+                duration: const Duration(seconds: 2),
+                curve: Curves.easeInOut,
+                builder: (context, scale, child) {
+                  return Transform.scale(scale: scale, child: child);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.22),
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Icon(icon, color: Colors.white, size: 26),
                 ),
-                child: Icon(icon, color: Colors.white, size: 26),
               ),
               const Spacer(),
               Text(
@@ -73,7 +84,7 @@ class HomeScreen extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: t.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.92),
+                  color: Colors.white.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -83,284 +94,376 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('EduMind')),
-      body: Stack(
-        children: [
-          // Purple side-rail ambiance like the reference.
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    cs.primary.withValues(alpha: 0.1),
-                    cs.primary.withValues(alpha: 0.0),
-                  ],
-                  begin: AlignmentDirectional.centerStart,
-                  end: AlignmentDirectional.centerEnd,
+    return Directionality(
+      textDirection:
+          TextDirection.rtl, // تفعيل اتجاه اللغة العربية من اليمين لليسار
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'عقول ذكية · EduMind',
+            style: TextStyle(fontWeight: FontWeight.w900),
+          ),
+          elevation: 0,
+          backgroundColor: cs.secondary,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.info_outline_rounded, size: 28),
+              onPressed: () {
+                // الانتقال السلس والمضمون إلى واجهة "حول التطبيق"
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AboutScreen()),
+                );
+              },
+            ),
+            const SizedBox(width: 8), // مسافة أمان صغيرة للحافة
+          ],
+        ),
+        extendBodyBehindAppBar: true,
+
+        body: Stack(
+          children: [
+            // خلفية حيوية مشعة ومريحة للطفل
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment
+                        .topRight, // متناسب مع الاتجاه العربيradius: 1.4,
+                    colors: [cs.primary.withValues(alpha: 0.12), cs.surface],
+                  ),
                 ),
               ),
             ),
-          ),
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(22, 18, 22, 32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          cs.primaryContainer.withValues(alpha: 0.95),
-                          cs.surface.withValues(alpha: 0.95),
-                        ],
-                        begin: AlignmentDirectional.topStart,
-                        end: AlignmentDirectional.bottomEnd,
+            SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(22, 110, 22, 32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // بطاقة الترحيب مع حركة دخول لطيفة من الأسفل للأعلى
+                  TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0.0, end: 1.0),
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeOutBack,
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(0, 30 * (1 - value)),
+                        child: Opacity(opacity: value, child: child),
+                      );
+                    },
+                    child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
                       ),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    padding: const EdgeInsets.all(18),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: cs.primary,
-                          child: const Text(
-                            '🧙',
-                            style: TextStyle(fontSize: 26),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'مرحباً، $_username',
-                                style: t.textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'Ready for a quick math adventure?',
-                                style: t.textTheme.bodyMedium?.copyWith(
-                                  color: cs.onSurfaceVariant,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              cs.primaryContainer.withValues(alpha: 0.85),
+                              cs.surface,
                             ],
+                            begin: AlignmentDirectional.topStart,
+                            end: AlignmentDirectional.bottomEnd,
+                          ),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: cs.primary.withValues(alpha: 0.1),
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: cs.secondary.withValues(alpha: 0.18),
-                            borderRadius: BorderRadius.circular(999),
-                            border: Border.all(
-                              color: cs.secondary.withValues(alpha: 0.35),
+                        padding: const EdgeInsets.all(18),
+                        child: Row(
+                          children: [
+                            // صورة الساحر تنبض بالذكاء والحيوية
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(begin: 0.8, end: 1.0),
+                              duration: const Duration(milliseconds: 800),
+                              curve: Curves.elasticOut,
+                              builder: (context, scale, child) =>
+                                  Transform.scale(scale: scale, child: child),
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: cs.primary.withValues(
+                                  alpha: 0.2,
+                                ),
+                                child: const Text(
+                                  '🧙',
+                                  style: TextStyle(fontSize: 28),
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            children: [
-                              const Text('🪙', style: TextStyle(fontSize: 16)),
-                              const SizedBox(width: 8),
-                              Text(
-                                '$_xpCurrent',
-                                style: t.textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'مرحباً، $_username 👋',
+                                    style: t.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'مستعد لمغامرة رياضيات سريعة؟',
+                                    style: t.textTheme.bodyMedium?.copyWith(
+                                      color: cs.onSurfaceVariant,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            // عداد قطع الذهب المتوهج
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(999),
+                                border: Border.all(
+                                  color: Colors.amber.withValues(alpha: 0.4),
                                 ),
                               ),
-                            ],
-                          ),
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    '🪙',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    '$_xpCurrent',
+                                    style: t.textTheme.labelLarge?.copyWith(
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.amber.shade900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  decoration: BoxDecoration(
-                    color: cs.primaryContainer.withValues(alpha: 0.55),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: cs.secondary.withValues(alpha: 0.35),
+                  const SizedBox(height: 16),
+
+                  // بطاقة الأيام المتتالية (Streak) النابضة
+                  TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0.96, end: 1.02),
+                    duration: const Duration(seconds: 2),
+                    curve: Curves.easeInOut,
+                    builder: (context, scale, child) =>
+                        Transform.scale(scale: scale, child: child),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            cs.errorContainer.withValues(alpha: 0.4),
+                            cs.surface,
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: Colors.orange.withValues(alpha: 0.3),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orange.withValues(alpha: 0.1),
+                            blurRadius: 18,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 14,
+                        ),
+                        child: Row(
+                          children: [
+                            const Text('🔥', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                'الحماس مستمر · 3 أيام متتالية!',
+                                style: t.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.orange.shade900,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: const Text(
+                                '⭐️ +20',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: cs.shadow.withValues(alpha: 0.1),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // شريط الخبرة والتقدم الذكي
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '⭐️ مستوى التقدم والخبرة',
+                        style: t.textTheme.labelLarge?.copyWith(
+                          color: cs.onSurfaceVariant,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      Text(
+                        '$_xpCurrent / $_xpGoal XP',
+                        style: t.textTheme.bodySmall?.copyWith(
+                          color: cs.primary,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                      vertical: 14,
-                    ),
-                    child: Row(
-                      children: [
-                        const Text('🔥', style: TextStyle(fontSize: 18)),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            'Streak · 3 days',
-                            style: t.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: cs.onPrimaryContainer,
-                            ),
+                  const SizedBox(height: 10),
+                  // شريط التقدم ينمو بسلاسة عند فتح الشاشة لتشجيع الطفل
+                  TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: xpFraction),
+                    duration: const Duration(milliseconds: 1200),
+                    curve: Curves.fastOutSlowIn,
+                    builder: (context, value, child) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: LinearProgressIndicator(
+                          value: value,
+                          minHeight: 14,
+                          backgroundColor: cs.surfaceContainerHighest,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            cs.secondary,
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: cs.surface.withValues(alpha: 0.75),
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                          child: Text(
-                            '⭐ +20',
-                            style: t.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: cs.onSurface,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  '⭐ Experience',
-                  style: t.textTheme.labelLarge?.copyWith(
-                    color: cs.onSurfaceVariant,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(999),
-                  child: LinearProgressIndicator(
-                    value: xpFraction,
-                    minHeight: 12,
-                    backgroundColor: cs.surfaceContainerHighest,
-                    color: cs.secondary,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '⭐ $_xpCurrent / $_xpGoal XP',
-                  style: t.textTheme.bodySmall?.copyWith(
-                    color: cs.onSurfaceVariant,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 18),
-                GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 14,
-                  crossAxisSpacing: 14,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  childAspectRatio: 1.18,
-                  children: [
-                    tile(
-                      title: 'الدروس',
-                      subtitle: 'Start here',
-                      icon: Icons.menu_book_rounded,
-                      colors: const [Color(0xFF4C1D95), Color(0xFF7C3AED)],
-                      onTap: () {
-                        Navigator.push(
+                  const SizedBox(height: 10),
+
+                  // شبكة الأزرار والخيارات الرئيسية بالعربية
+                  GridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    childAspectRatio: 1.15,
+                    children: [
+                      tile(
+                        title: 'الدروس الممتعة',
+                        subtitle: 'ابدأ من هنا 🚀',
+                        icon: Icons.menu_book_rounded,
+                        colors: const [Color(0xFF6366F1), Color(0xFF4F46E5)],
+                        onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute<void>(
                             builder: (context) => const LessonScreen(),
                           ),
-                        );
-                      },
-                    ),
-                    tile(
-                      title: 'التحديات',
-                      subtitle: 'Daily',
-                      icon: Icons.local_fire_department_rounded,
-                      colors: const [Color(0xFFF59E0B), Color(0xFFFB7185)],
-                      onTap: () {
-                        Navigator.push(
+                        ),
+                      ),
+                      tile(
+                        title: 'التحديات اليومية',
+                        subtitle: 'سباق الأبطال ⏱️',
+                        icon: Icons.local_fire_department_rounded,
+                        colors: const [Color(0xFFF59E0B), Color(0xFFEA580C)],
+                        onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute<void>(
                             builder: (context) => const GameScreen(),
                           ),
-                        );
-                      },
-                    ),
-                    tile(
-                      title: 'التدريب',
-                      subtitle: 'Practice',
-                      icon: Icons.fitness_center_rounded,
-                      colors: const [Color(0xFF14B8A6), Color(0xFF06B6D4)],
-                      onTap: () {
-                        Navigator.push(
+                        ),
+                      ),
+                      tile(
+                        title: 'نادي التدريب',
+                        subtitle: 'مرّن عقلك مئة مرة 🧠',
+                        icon: Icons.fitness_center_rounded,
+                        colors: const [Color(0xFF10B981), Color(0xFF059669)],
+                        onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute<void>(
                             builder: (context) => const GameScreen(),
                           ),
-                        );
-                      },
-                    ),
-                    tile(
-                      title: 'الإنجازات',
-                      subtitle: 'Rewards',
-                      icon: Icons.emoji_events_rounded,
-                      colors: const [Color(0xFF8B5CF6), Color(0xFFF59E0B)],
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 18),
-                PressableScale(
-                  borderRadius: BorderRadius.circular(26),
-                  onTap: () {
-                    Navigator.push(
+                        ),
+                      ),
+                      tile(
+                        title: 'لوحة الإنجازات',
+                        subtitle: 'قاعة الأوسمة والجوائز 🏆',
+                        icon: Icons.emoji_events_rounded,
+                        colors: const [Color(0xFFEC4899), Color(0xFFD946EF)],
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // زر "تابع التعلم" الذكي والمشع
+                  PressableScale(
+                    borderRadius: BorderRadius.circular(26),
+                    onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute<void>(
                         builder: (context) => const LessonScreen(),
                       ),
-                    );
-                  },
-                  child: Card(
+                    ),
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
                             cs.surface,
-                            cs.primaryContainer.withValues(alpha: 0.55),
+                            cs.primaryContainer.withValues(alpha: 0.3),
                           ],
-                          begin: AlignmentDirectional.topStart,
-                          end: AlignmentDirectional.bottomEnd,
                         ),
                         borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: cs.primary.withValues(alpha: 0.2),
+                          width: 1.5,
+                        ),
                       ),
                       padding: const EdgeInsets.all(18),
                       child: Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: cs.secondary.withValues(alpha: 0.16),
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: Icon(
-                              Icons.gps_fixed_rounded,
-                              color: cs.secondary,
+                          // أيقونة الهدف النابضة
+                          TweenAnimationBuilder<double>(
+                            tween: Tween<double>(begin: 0.9, end: 1.1),
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.easeInOut,
+                            builder: (context, scale, child) =>
+                                Transform.scale(scale: scale, child: child),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: cs.primary.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.gps_fixed_rounded,
+                                color: cs.primary,
+                                size: 24,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 14),
@@ -369,14 +472,14 @@ class HomeScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '🎯 Continue learning',
+                                  '🎯 تابع رحلة التعلم',
                                   style: t.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w900,
                                   ),
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 4),
                                 Text(
-                                  'Adding rational numbers · Unit 3',
+                                  'جمع الأعداد العادية · الوحدة الثالثة',
                                   style: t.textTheme.bodyMedium?.copyWith(
                                     color: cs.onSurfaceVariant,
                                     fontWeight: FontWeight.w600,
@@ -386,196 +489,119 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           Icon(
-                            Icons.chevron_right_rounded,
-                            color: cs.onSurfaceVariant,
-                          ),
+                            Icons.chevron_left_rounded,
+                            color: cs.primary,
+                          ), // تم تغيير السهم ليناسب الاتجاه العربي
                         ],
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 14),
-                Row(
-                  children: const [
-                    Expanded(child: DailyChallengeCard()),
-                    SizedBox(width: 14),
-                    Expanded(child: RewardMiniCard()),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                const ProgressPathCard(),
-                const SizedBox(height: 14),
-                const DailyGoalBanner(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+                  const SizedBox(height: 16),
 
-class DailyGoalBanner extends StatelessWidget {
-  const DailyGoalBanner({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        decoration: BoxDecoration(
-          color: cs.primaryContainer.withValues(alpha: 0.55),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: cs.secondary.withValues(alpha: 0.45)),
-          boxShadow: [
-            BoxShadow(
-              color: cs.shadow.withValues(alpha: 0.1),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
+                  // الكروت السفلية التفاعلية
+                  Row(
+                    children: const [
+                      Expanded(child: DailyChallengeCard()),
+                      SizedBox(width: 14),
+                      Expanded(child: RewardMiniCard()),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const ProgressPathCard(),
+                  const SizedBox(height: 14),
+                  const DailyGoalBanner(),
+                ],
+              ),
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Expanded(
-                    child: Text(
-                      '🏆 Daily goal: 2 lessons',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text('50%'),
-                ],
-              ),
-              // Text(
-              //   'Daily goal: 2 lessons',
-              //   style: t.textTheme.titleSmall?.copyWith(
-              //     fontWeight: FontWeight.w600,
-              //     color: cs.onPrimaryContainer,
-              //   ),
-              // ),
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: LinearProgressIndicator(
-                  value: 0.5,
-                  minHeight: 6,
-                  backgroundColor: cs.surfaceContainerHighest,
-                  color: cs.secondary,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
 }
 
+// كرت التحدي السريع
 class DailyChallengeCard extends StatelessWidget {
   const DailyChallengeCard({super.key});
-
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final cs = t.colorScheme;
     return PressableScale(
       borderRadius: BorderRadius.circular(26),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute<void>(builder: (context) => const GameScreen()),
-        );
-      },
-      child: Card(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [cs.secondary.withValues(alpha: 0.22), cs.surface],
-              begin: AlignmentDirectional.topStart,
-              end: AlignmentDirectional.bottomEnd,
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute<void>(builder: (context) => const GameScreen()),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [cs.secondaryContainer.withValues(alpha: 0.6), cs.surface],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: cs.secondary.withValues(alpha: 0.2)),
+        ),
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '⚡️ تحدي اليوم',
+              style: t.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w900,
+              ),
             ),
-            borderRadius: BorderRadius.circular(24),
-          ),
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '⚡ Daily challenge',
-                style: t.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
+            const SizedBox(height: 6),
+            Text(
+              '3 أسئلة سريعة وذكية',
+              style: t.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: cs.onSurfaceVariant,
               ),
-              const SizedBox(height: 10),
-              Text(
-                '3 quick questions',
-                style: t.textTheme.bodyMedium?.copyWith(
-                  color: cs.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: cs.secondary,
-                      borderRadius: BorderRadius.circular(999),
-                      boxShadow: [
-                        BoxShadow(
-                          color: cs.shadow.withValues(alpha: 0.12),
-                          blurRadius: 16,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      'Play',
-                      style: t.textTheme.labelLarge?.copyWith(
-                        color: cs.onSecondary,
-                        fontWeight: FontWeight.w900,
-                      ),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: cs.secondary,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    'انطلق',
+                    style: TextStyle(
+                      color: cs.onSecondary,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      '🏆 +15 XP',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
-                      style: t.textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: cs.onSurfaceVariant,
-                      ),
-                    ),
+                ),
+                Text(
+                  '+15 XP',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: cs.secondary,
+                    fontSize: 12,
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
+// كرت صندوق الهدية النابض بانتظار البطل ليفتحه
 class RewardMiniCard extends StatelessWidget {
   const RewardMiniCard({super.key});
-
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
@@ -583,105 +609,45 @@ class RewardMiniCard extends StatelessWidget {
     return PressableScale(
       borderRadius: BorderRadius.circular(26),
       onTap: () {},
-      child: Card(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [cs.primaryContainer.withValues(alpha: 0.9), cs.surface],
-              begin: AlignmentDirectional.topStart,
-              end: AlignmentDirectional.bottomEnd,
-            ),
-            borderRadius: BorderRadius.circular(24),
-          ),
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '🎁 Reward',
-                style: t.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Open your chest',
-                style: t.textTheme.bodyMedium?.copyWith(
-                  color: cs.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text('🧰', style: t.textTheme.headlineMedium),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ProgressPathCard extends StatelessWidget {
-  const ProgressPathCard({super.key});
-
-  static const List<_Node> _nodes = [
-    _Node(label: '1', color: Color(0xFFF59E0B), icon: Icons.looks_one_rounded),
-    _Node(label: '2', color: Color(0xFF7C3AED), icon: Icons.looks_two_rounded),
-    _Node(label: '3', color: Color(0xFF14B8A6), icon: Icons.looks_3_rounded),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Theme.of(context);
-    final cs = t.colorScheme;
-    return Card(
       child: Container(
         decoration: BoxDecoration(
-          color: cs.surface,
+          gradient: LinearGradient(
+            colors: [cs.primaryContainer.withValues(alpha: 0.4), cs.surface],
+          ),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.6)),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.15)),
         ),
         padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '🗺️ Your path',
+              '🎁 هدية بانتظارك',
               style: t.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w900,
-                color: cs.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                for (int i = 0; i < _nodes.length; i++) ...[
-                  _PathNode(node: _nodes[i]),
-                  if (i != _nodes.length - 1)
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Divider(
-                          thickness: 2,
-                          color: cs.outlineVariant.withValues(alpha: 0.6),
-                        ),
-                      ),
-                    ),
-                ],
-                const SizedBox(width: 10),
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: cs.secondary.withValues(alpha: 0.18),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: cs.secondary.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: const Center(child: Text('🧰')),
-                ),
-              ],
+            const SizedBox(height: 4),
+            Text(
+              'جاهزة للفتح الآن!',
+              style: t.textTheme.bodySmall?.copyWith(
+                color: cs.onSurfaceVariant,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // تأثير حركة نبض مستمرة لإغراء الطفل بالضغط على الصندوق
+            TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 1.0, end: 1.2),
+              duration: const Duration(seconds: 1),
+              curve: Curves.easeInOut,
+              builder: (context, scale, child) {
+                return Transform.scale(
+                  scale: (scale > 1.1) ? 2.2 - scale : scale,
+                  child: child,
+                );
+              },
+              child: const Text('🧰', style: TextStyle(fontSize: 32)),
             ),
           ],
         ),
@@ -690,30 +656,93 @@ class ProgressPathCard extends StatelessWidget {
   }
 }
 
+// خريطة طريق الأبطال
+class ProgressPathCard extends StatelessWidget {
+  const ProgressPathCard({super.key});
+
+  static const List<_Node> _nodes = [
+    _Node(label: '1', color: Color(0xFF6366F1), icon: Icons.looks_one_rounded),
+    _Node(label: '2', color: Color(0xFF3B82F6), icon: Icons.looks_two_rounded),
+    _Node(label: '3', color: Color(0xFF10B981), icon: Icons.looks_3_rounded),
+  ];
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final cs = t.colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.4)),
+      ),
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '🗺 خريطة طريق الأبطال',
+            style: t.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              for (int i = 0; i < _nodes.length; i++) ...[
+                _PathNode(node: _nodes[i]),
+                if (i != _nodes.length - 1)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Divider(
+                        thickness: 3,
+                        color: cs.primary.withValues(alpha: 0.2),
+                      ),
+                    ),
+                  ),
+              ],
+              const SizedBox(width: 10),
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: Colors.amber.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.amber),
+                ),
+                child: const Center(
+                  child: Text('👑', style: TextStyle(fontSize: 20)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _PathNode extends StatelessWidget {
   const _PathNode({required this.node});
-
   final _Node node;
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: 44,
-      height: 44,
+    return Container(
+      width: 46,
+      height: 46,
       decoration: BoxDecoration(
         color: node.color,
-        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withValues(alpha: 0.12),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            color: node.color.withValues(alpha: 0.4),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Icon(node.icon, color: Colors.white),
+      child: Icon(node.icon, color: Colors.white, size: 24),
     );
   }
 }
@@ -723,4 +752,70 @@ class _Node {
   final String label;
   final Color color;
   final IconData icon;
+}
+
+// بانر الهدف اليومي
+class DailyGoalBanner extends StatelessWidget {
+  const DailyGoalBanner({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final t = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              cs.primary.withValues(alpha: 0.1),
+              cs.surfaceContainerLowest,
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.2)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '🏆 هدفك اليومي: إتمام درسين',
+                    style: t.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  Text(
+                    '50%',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: cs.primary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 0, end: 0.5),
+                duration: const Duration(seconds: 1),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) => ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: value,
+                    minHeight: 8,
+                    backgroundColor: cs.surfaceContainerHighest,
+                    color: cs.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
