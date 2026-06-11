@@ -31,8 +31,12 @@ class LoginScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          syrianPurple.withValues(alpha: 0.15),
-                          syrianOrange.withValues(alpha: 0.05),
+                          Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.15),
+                          Theme.of(
+                            context,
+                          ).colorScheme.secondary.withValues(alpha: 0.05),
                         ],
                         begin: AlignmentDirectional.topStart,
                         end: AlignmentDirectional.bottomEnd,
@@ -65,14 +69,19 @@ class LoginScreen extends StatelessWidget {
                             height: 150,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              gradient: const LinearGradient(
-                                colors: [syrianPurple, syrianOrange],
+                              gradient: LinearGradient(
+                                colors: [
+                                  Theme.of(context).colorScheme.primary,
+                                  Theme.of(context).colorScheme.secondary,
+                                ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: syrianPurple.withValues(alpha: 0.4),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.primary.withValues(alpha: 0.4),
                                   blurRadius: 15,
                                   offset: const Offset(0, 8),
                                 ),
@@ -133,16 +142,16 @@ class LoginScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                'أهلاً بك في عالم الذكاء! 👋',
+                                'أهلاً بك في رحلة اللعب والتحدي ! 👋',
                                 style: t.textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.w900,
-                                  color: syrianPurple,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                'مستعد لتحدي الرياضيات وجمع نقاط الـ XP؟',
+                                'هل أنت مستعد لخوض هذه المغامرة الشيّقة ؟',
                                 style: t.textTheme.bodyMedium?.copyWith(
                                   color: cs.onSurfaceVariant,
                                   fontWeight: FontWeight.w600,
@@ -175,9 +184,11 @@ class LoginScreen extends StatelessWidget {
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
                                   labelText: 'البريد الإلكتروني',
-                                  prefixIcon: const Icon(
+                                  prefixIcon: Icon(
                                     Icons.email_rounded,
-                                    color: syrianPurple,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
@@ -189,32 +200,64 @@ class LoginScreen extends StatelessWidget {
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   labelText: 'كلمة المرور',
-                                  prefixIcon: const Icon(
+                                  prefixIcon: Icon(
                                     Icons.lock_rounded,
-                                    color: syrianPurple,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 24),
+
+                              // === [تعديل جديد]: زر هل نسيت كلمة السر؟ ===
+                              const SizedBox(height: 6),
+                              Align(
+                                alignment: AlignmentDirectional
+                                    .centerEnd, // لمحاذاة النص لليسار في واجهات RTL
+                                child: TextButton(
+                                  onPressed: () {
+                                    // هنا تضع كود الانتقال لصفحة استعادة كلمة السر
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                  child: const Text(
+                                    'هل نسيت كلمة السر؟',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
 
                               // زر "متابعة" النابض بشكل مستمر لجذب عين الطالب
                               FilledButton(
                                     onPressed: () => _goHome(context),
                                     style: FilledButton.styleFrom(
-                                      backgroundColor:
-                                          syrianOrange, // برتقالي جاذب ومحمس للأطفال
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary, // برتقالي جاذب ومحمس للأطفال
                                       foregroundColor: Colors.white,
                                       minimumSize: const Size(
                                         double.infinity,
                                         58,
                                       ),
                                       elevation: 4,
-                                      shadowColor: syrianOrange.withValues(
-                                        alpha: 0.4,
-                                      ),
+                                      shadowColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary
+                                          .withValues(alpha: 0.4),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(26),
                                       ),
@@ -255,13 +298,16 @@ class LoginScreen extends StatelessWidget {
                               TextButton(
                                 style: TextButton.styleFrom(
                                   minimumSize: const Size(double.infinity, 52),
-                                  foregroundColor: syrianPurple,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(26),
                                     side: BorderSide(
-                                      color: syrianPurple.withValues(
-                                        alpha: 0.5,
-                                      ),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary
+                                          .withValues(alpha: 0.5),
                                       width: 1.5,
                                     ),
                                   ),
@@ -283,6 +329,39 @@ class LoginScreen extends StatelessWidget {
                               ).animate().shake(
                                 delay: 600.ms,
                                 duration: 500.ms,
+                              ),
+
+                              // === [تعديل جديد]: خيار إنشاء حساب جديد ===
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'ليس لديك حساب؟ ',
+                                    style: TextStyle(
+                                      color: cs.onSurfaceVariant,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // هنا تضع كود الانتقال لصفحة إنشاء الحساب الجديد
+                                    },
+                                    child: Text(
+                                      'أنشئ حساباً الآن',
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        decoration: TextDecoration
+                                            .underline, // لإبراز الرابط بصرياً
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

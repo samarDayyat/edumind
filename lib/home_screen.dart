@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   // معلومات تجريبية ثابتة — بدون حالة أو طبقة بيانات حتى الآن.
-  static const String _username = 'ملاذ';
+  static const String _username = 'الاسم';
   static const int _xpCurrent = 320;
   static const int _xpGoal = 500;
 
@@ -100,8 +100,8 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'عقول ذكية · EduMind',
-            style: TextStyle(fontWeight: FontWeight.w900),
+            '  أوبنمايند',
+            style: TextStyle(fontWeight: FontWeight.normal),
           ),
           elevation: 0,
           backgroundColor: cs.secondary,
@@ -116,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(width: 8), // مسافة أمان صغيرة للحافة
+            const SizedBox(width: 2), // مسافة أمان صغيرة للحافة
           ],
         ),
         extendBodyBehindAppBar: true,

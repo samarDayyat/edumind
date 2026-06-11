@@ -193,7 +193,7 @@ class OnboardingScreen extends StatelessWidget {
                               const SizedBox(height: 18),
                               // النص الترحيبي مع تأثير الظهور المتدرج
                               const Text(
-                                    "مرحباً بك في عالم\nالخوارزمي للرياضيات!",
+                                    "طريقك يبدأ من هنا",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 28,
@@ -208,7 +208,7 @@ class OnboardingScreen extends StatelessWidget {
                               const SizedBox(height: 15),
 
                               const Text(
-                                    "تعلم العب واكتشف  قوة الأفكار\nأسلوب يشبه الألعاب",
+                                    "تعلّم . العب . واكتشف ما يشبهك .",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 16,
@@ -255,7 +255,7 @@ class OnboardingScreen extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      'تطبيق Edumind لتحقيق أفضل إنجاز',
+                                      'تطبيق OpenMind لتحقيق أفضل إنجاز',
                                       style: t.textTheme.bodyMedium?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: cs.onSurfaceVariant,
@@ -362,7 +362,7 @@ class _AnimatedCtaState extends State<_AnimatedCta> {
                     children: [
                       Icon(Icons.play_arrow_rounded, size: 26),
                       SizedBox(width: 10),
-                      Text("ابدأ الآن"),
+                      Text("ابدأ رحلتي"),
                     ],
                   ),
                 )

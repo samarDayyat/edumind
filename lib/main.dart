@@ -1,10 +1,16 @@
+import 'package:edumind/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:provider/provider.dart';
 import 'onboarding_screen.dart';
 
 void main() {
-  runApp(const EduMindApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const EduMindApp(),
+    ),
+  );
 }
 
 /// Brand colors: purple primary, orange secondary (Duolingo-style energy).
@@ -92,10 +98,12 @@ class EduMindApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'EduMind',
       debugShowCheckedModeBanner: false,
-      theme: _buildTheme(),
+      theme: themeProvider.themeData,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

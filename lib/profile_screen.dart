@@ -91,14 +91,14 @@ class ProfileScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'ملاذ البطل ',
+                                    'اسم الطالب ',
                                     style: t.textTheme.headlineSmall?.copyWith(
                                       fontWeight: FontWeight.w900,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'الصف السابع · مستكشف الرياضيات 🧠',
+                                    'الصف السابع·مستكشف الرياضيات🧠',
                                     style: t.textTheme.bodyMedium?.copyWith(
                                       color: cs.onSurfaceVariant,
                                       fontWeight: FontWeight.w600,

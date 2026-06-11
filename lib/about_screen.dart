@@ -44,9 +44,9 @@ class _AboutScreenState extends State<AboutScreen>
         appBar: AppBar(
           title: const Text(
             'حول المغامرة',
-            style: TextStyle(fontWeight: FontWeight.w900),
+            style: TextStyle(fontWeight: FontWeight.normal),
           ),
-          centerTitle: true,
+          //   centerTitle: true,
           elevation: 0,
           backgroundColor: cs.secondary,
         ),
@@ -101,10 +101,10 @@ class _AboutScreenState extends State<AboutScreen>
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // اسم التطبيق بهوية فخمة
+                    // اسم التطبيق بهوية openMind الجديدة
                     Center(
                       child: Text(
-                        'عقول ذكية · EduMind',
+                        'openMind',
                         style: t.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.w900,
                           color: cs.onSurface,
@@ -139,16 +139,15 @@ class _AboutScreenState extends State<AboutScreen>
                     ),
                     const SizedBox(height: 32),
 
+                    // === قسم: لماذا openMind؟ ===
                     Text(
-                      'رسالتنا وهدفنا 🎯',
+                      'لماذا openMind؟ 🤔',
                       style: t.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                         color: cs.onSurface,
                       ),
                     ),
                     const SizedBox(height: 12),
-
-                    // بطاقة الهدف الرئيسي للتطبيق
                     Container(
                       decoration: BoxDecoration(
                         color: cs.surface,
@@ -166,7 +165,10 @@ class _AboutScreenState extends State<AboutScreen>
                       ),
                       padding: const EdgeInsets.all(20),
                       child: Text(
-                        'انطلقنا برؤية طموحة لتحويل مناهج الرياضيات المدرسية الجافة إلى مغامرة بصرية تفاعلية مشوقة تناسب أبطالنا الصغار. نهدف إلى تنشيط خلايا الذكاء، وبناء مهارات التفكير المنطقي السريع عبر اللعب، والتحدي، وكسب الأوسمة والشارات التقديرية الفاخرة ليبقى طفلك متحفزاً للتعلم دائماً!',
+                        'لأن كل طالب لا يحتاج أن يُقارن بغيره، بل أن يُفهم كما هو.\n\n'
+                        'وراء كل طالب طريقة خاصة في الفهم، واهتمام يشدّه، وموهبة تنتظر أن تجد مكانها.\n\n'
+                        'في عالم مليء بالشاشات، الألعاب، المحتوى السريع، وكثرة الخيارات، صار الطالب يحتاج تجربة تعلّم تشدّه بوعي، وتساعده يركّز، ويفهم أين يمكن أن يكون طريقه.\n\n'
+                        'صممنا openMind ليحوّل التعلّم من حفظ جامد إلى تجربة تفاعلية قريبة من الطالب؛ يتعلّم، يجرّب، يخطئ، يفهم، ثم يبدأ يرى طريقه بشكل أوضح.',
                         style: t.textTheme.bodyLarge?.copyWith(
                           height: 1.6,
                           fontWeight: FontWeight.w700,
@@ -176,8 +178,46 @@ class _AboutScreenState extends State<AboutScreen>
                     ),
                     const SizedBox(height: 24),
 
+                    // === قسم: رؤيتنا ===
                     Text(
-                      'ركائز رِحلتنا التعليمية ✨',
+                      'رؤيتنا ✨',
+                      style: t.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: cs.surface,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: cs.secondary.withValues(alpha: 0.15),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: cs.shadow.withValues(alpha: 0.04),
+                            blurRadius: 16,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        'أن نجعل التعلّم مساحة آمنة وشخصية، تساعد كل طالب على أن يفهم بطريقته، يكتشف ما يشدّه، ويربط ما يتعلّمه بحياته وواقعه ومستقبله.\n\n'
+                        'نؤمن أن العلم ليس للحفظ فقط، بل لفهم الحياة وخدمة الناس، وأن المجتمع الأقوى لا يُبنى من أشخاص متشابهين، بل من أشخاص يعرف كل واحد منهم قيمته ومكانه.',
+                        style: t.textTheme.bodyLarge?.copyWith(
+                          height: 1.6,
+                          fontWeight: FontWeight.w700,
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // === قسم: ماذا يفعل openMind؟ ===
+                    Text(
+                      'ماذا يفعل openMind؟ 🚀',
                       style: t.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                         color: cs.onSurface,
@@ -185,68 +225,82 @@ class _AboutScreenState extends State<AboutScreen>
                     ),
                     const SizedBox(height: 12),
 
-                    // ميزة 1: اللعب والتعلم
+                    // ميزة 1
                     _buildFeatureCard(
                       context,
                       emoji: '🎮',
-                      title: 'التعلم القائم على الألعاب',
+                      title: 'التحديات التفاعلية',
                       description:
-                          'تدمير وحوش المسائل الحسابية وتحويل التمارين الصعبة إلى مستويات حماسية ممتعة.',
+                          'يحوّل الدروس إلى تحديات وتجارب تفاعلية مشوقة.',
                       color: const Color(0xFF7C3AED),
                     ),
                     const SizedBox(height: 12),
 
-                    // ميزة 2: الذكاء الاصطناعي
+                    // ميزة 2
                     _buildFeatureCard(
                       context,
-                      emoji: '🤖',
-                      title: 'مرافقة الذكي "إيدو"',
+                      emoji: '🧠',
+                      title: 'تقريب الأفكار ذكياً',
                       description:
-                          'مرشد تفاعلي ذكي يبسط المفاهيم المعقدة، وينبض بالحياة لتشجيع طفلك خطوة بخطوة.',
+                          'يقرّب الفكرة بالطريقة الأنسب والأقرب لذهن الطالب.',
                       color: const Color(0xFF14B8A6),
                     ),
                     const SizedBox(height: 12),
 
-                    // ميزة 3: الأوسمة والمكافآت
+                    // ميزة 3
                     _buildFeatureCard(
                       context,
-                      emoji: '🏆',
-                      title: 'نظام الشرف والمكافآت',
+                      emoji: '🧭',
+                      title: 'استكشاف الاهتمامات',
                       description:
-                          'جمع الأوسمة، ونقاط الـ XP، وتحديات الأيام المتتالية (Streak) لتعزيز روح الإنجاز والفخر.',
+                          'يتعلّم من اختيارات الطالب ليكشف اهتماماته وميوله المستقبليّة.',
                       color: const Color(0xFFF59E0B),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 12),
+
+                    // ميزة 4
+                    _buildFeatureCard(
+                      context,
+                      emoji: '🌍',
+                      title: 'الربط بالواقع الحقيقي',
+                      description:
+                          'يريه كيف يرتبط ما يتعلّمه بالحياة الواقعية والعملية من حوله.',
+                      color: const Color(0xFF3B82F6),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // ميزة 5
+                    _buildFeatureCard(
+                      context,
+                      emoji: '🤝',
+                      title: 'بناء القيمة الذاتية',
+                      description:
+                          'يساعده أن يشعر أن له قيمة فريدة، وطريقاً واضحاً، ومكاناً في المجتمع.',
+                      color: const Color(0xFFEF4444),
+                    ),
 
                     // تذييل الصفحة اللطيف
                     Padding(
                       padding: const EdgeInsets.only(top: 30, bottom: 20),
                       child: Center(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .center, // لتوسيع المحتوى في المنتصف
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // 1. النص (الجزء الأول)
-                            Text(
+                            const Text(
                               'صُنع بكل حب لجيل المستقبل السوري الواعد ❤️',
                               style: TextStyle(
-                                fontFamily: 'Cairo', // نفس الخط الجميل المعتمد
+                                fontFamily: 'Cairo',
                                 fontSize: 14,
-                                color: const Color(
-                                  0xFF6A1B9A,
-                                ), // لون بنفسجي خفيف
+                                color: Color(0xFF6A1B9A),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(
-                              width: 8,
-                            ), // مسافة صغيرة بين النص والعلم
-                            // 2. العلم كصورة
+                            const SizedBox(width: 8),
                             Image.asset(
-                              'assets/images/syrian_flag_new.png', // مسار صورة العلم الجديد الخاص بك
-                              width: 24, // عرض صغير ومناسب
-                              height: 24, // ارتفاع صغير ومناسب
-                              fit: BoxFit.contain, // للحفاظ على أبعاد الصورة
+                              'assets/images/syrian_flag_new.png',
+                              width: 24,
+                              height: 24,
+                              fit: BoxFit.contain,
                             ),
                           ],
                         ),

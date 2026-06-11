@@ -1,5 +1,6 @@
-import 'package:edumind/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'theme_selection_screen.dart'; // الواجهة التالية لاختيار السمة
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -11,31 +12,116 @@ class ProfileSetupScreen extends StatefulWidget {
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final TextEditingController _nameController = TextEditingController();
 
-  // قائمة الاهتمامات
-  final List<Map<String, String>> _interests = [
-    {'icon': '⚽', 'label': 'رياضة'},
-    {'icon': '🎮', 'label': 'ألعاب'},
-    {'icon': '🎨', 'label': 'رسم وتصميم'},
-    {'icon': '📖', 'label': 'قصص'},
-    {'icon': '🏠', 'label': 'ديكور وبناء'},
-    {'icon': '🤖', 'label': 'روبوتات وتكنولوجيا'},
-  ];
-
-  // قائمة أساليب التعلم
-  final List<String> _learningStyles = [
-    'بحب أجرب لحالي',
-    'بحب حدا يشرحلي خطوة خطوة',
-    'بحب التحديات السريعة',
-    'بحب الصور والألوان',
-    'بحب القصص',
-  ];
-
-  final List<int> _selectedInterests = [];
+  // متغيرات الاختيارات
+  String? _selectedGender;
+  String? _selectedClass;
   int? _selectedLearningStyle;
+  final List<int> _selectedInterests = [];
+
+  // قائمة الصفوف الدراسية
+  final List<String> _classes = ['خامس', 'سادس', 'سابع', 'ثامن'];
+
+  // قائمة الاهتمامات المحدثة والموسعة مع الأيقونات الذكية
+  final List<Map<String, String>> _interests = [
+    {'icon': '🎮', 'label': 'ألعاب وتحديات'},
+    {'icon': '⚽', 'label': 'رياضة وحركة'},
+    {'icon': '🎨', 'label': 'رسم وتصميم'},
+    {'icon': '🔬', 'label': 'علوم وتكنولوجيا'},
+    {'icon': '🏗️', 'label': 'بناء وعمارة'},
+    {'icon': '⚡', 'label': 'طبيعة وطاقة'},
+    {'icon': '🤝', 'label': 'مساعدة الناس'},
+    {'icon': '🧩', 'label': 'ألغاز وتفكير'},
+    {'icon': '📚', 'label': 'قراءة وقصص'},
+  ];
+
+  // أساليب التعلم بصياغة فصحى ورموز واضحة
+  final List<Map<String, String>> _learningStyles = [
+    {
+      'title': 'خطوة بخطوة',
+      'desc': 'أفضل أن يرتّب لي شخص ما الفكرة الموجهة مسبقاً',
+      'icon': '🪜',
+    },
+    {
+      'title': 'أجرّب بسرعة',
+      'desc': 'أعطني مثالاً قصيراً وسأقوم بالتطبيق فوراً بنفسي',
+      'icon': '⚡',
+    },
+    {
+      'title': 'قصة من الحياة',
+      'desc': 'أريد موقفاً واقعياً يجعلني أفهم الهدف والسبب',
+      'icon': '📖',
+    },
+  ];
 
   // الألوان المعتمدة للتطبيق
-  final Color _primaryColor = const Color(0xFF6A1B9A); // البنفسجي
-  final Color _accentColor = const Color(0xFFFF9800); // البرتقالي
+  final Color _primaryColor = const Color(0xFF6A1B9A); // البنفسجي الحديث
+  final Color _accentColor = const Color(0xFFFF9800); // البرتقالي المتوهج
+  final Color _backgroundColor = const Color(0xFFF8F9FD); // خلفية ناعمة وحديثة
+  final Color _textDarkColor = const Color(0xFF1A1A2E);
+
+  // تعريف الخط الموحد بدقة بناءً على طلبك
+  final String _fontFamily = 'Tajawal';
+  final String _numberFont = 'Plus Jakarta Sans';
+
+  // تدرج لوني عام مدمج بين البرتقالي والبنفسجي للحواف والأزرار
+  Gradient get _primaryGradient => LinearGradient(
+    colors: [_accentColor, _primaryColor],
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+  );
+
+  // تدرج لوني فاتح جداً لعناصر النقر والاختيار
+  Gradient get _lightSelectedGradient => LinearGradient(
+    colors: [_accentColor.withOpacity(0.12), _primaryColor.withOpacity(0.12)],
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedProfileData();
+    _nameController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  // دالة تحميل البيانات الدائمة من ذاكرة الجهاز (SharedPreferences)
+  Future<void> _loadSavedProfileData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _nameController.text = prefs.getString('user_name') ?? '';
+      _selectedGender = prefs.getString('user_gender');
+      _selectedClass = prefs.getString('user_class');
+      _selectedLearningStyle = prefs.getInt('user_learning_style');
+
+      List<String>? savedInterests = prefs.getStringList('user_interests');
+      if (savedInterests != null) {
+        _selectedInterests.clear();
+        for (var indexStr in savedInterests) {
+          _selectedInterests.add(int.parse(indexStr));
+        }
+      }
+    });
+  }
+
+  // دالة حفظ البيانات بشكل دائم في الذاكرة المحلية
+  Future<void> _saveProfileData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_name', _nameController.text.trim());
+    await prefs.setString('user_gender', _selectedGender!);
+    await prefs.setString('user_class', _selectedClass!);
+    await prefs.setInt('user_learning_style', _selectedLearningStyle!);
+
+    List<String> interestStrings = _selectedInterests
+        .map((e) => e.toString())
+        .toList();
+    await prefs.setStringList('user_interests', interestStrings);
+  }
 
   void _toggleInterest(int index) {
     setState(() {
@@ -45,14 +131,16 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         if (_selectedInterests.length < 2) {
           _selectedInterests.add(index);
         } else {
-          // رسالة تنبيه تفاعلية عند محاولة اختيار أكثر من اهتمامين
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
+              backgroundColor: _primaryColor,
               content: Text(
-                'يمكنك اختيار اهتمامين فقط للحفاظ على بساطة حسابك!',
-                style: TextStyle(fontFamily: 'Cairo'),
+                'يمكنك اختيار اهتمامين فقط للحفاظ على تخصيص ذكي!',
+                style: TextStyle(
+                  fontFamily: _fontFamily,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              duration: Duration(seconds: 2),
             ),
           );
         }
@@ -60,274 +148,526 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final t = Theme.of(context);
-
-    final cs = t.colorScheme;
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'إنشاء الملف الشخصي',
-          style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold),
+  // ودجت مخصص لعنونة الفقرات بلمسة متدرجة واضحة ومحددة
+  Widget _buildSectionHeader(String title, String subtitle, IconData icon) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ShaderMask(
+          shaderCallback: (bounds) => _primaryGradient.createShader(bounds),
+          child: Icon(icon, color: Colors.white, size: 28),
         ),
-        centerTitle: true,
-        backgroundColor: cs.secondary,
-        elevation: 0,
-      ),
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
+        const SizedBox(width: 14),
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // القسم الأول: الصورة والاسم
-              Center(
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: _accentColor, width: 4),
-                          ),
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundColor: _primaryColor.withOpacity(0.1),
-                            child: Icon(
-                              Icons.person,
-                              size: 60,
-                              color: _primaryColor,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () {
-                              // هنا يتم ربط اختيار الصورة لاحقاً
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: _accentColor,
-                              radius: 18,
-                              child: const Icon(
-                                Icons.camera_alt,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _nameController,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontFamily: 'Cairo'),
-                      decoration: InputDecoration(
-                        hintText: 'ما هو اسمك الرائع؟',
-                        hintStyle: const TextStyle(fontFamily: 'Cairo'),
-                        prefixIcon: Icon(Icons.edit, color: _accentColor),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
-                            color: _primaryColor,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 35),
-
-              // القسم الثاني: الاهتمامات
-              const Text(
-                'اختر اهتماماتك المفضلة (1 أو 2 فقط):',
+              Text(
+                title,
                 style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 18,
+                  fontFamily: _fontFamily,
                   fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: _textDarkColor,
                 ),
               ),
-              const SizedBox(height: 15),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2.5,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontFamily: _fontFamily,
+                  fontSize: 13,
+                  color: Colors.grey[600],
                 ),
-                itemCount: _interests.length,
-                itemBuilder: (context, index) {
-                  final isSelected = _selectedInterests.contains(index);
-                  return GestureDetector(
-                    onTap: () => _toggleInterest(index),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? _accentColor.withOpacity(0.15)
-                            : Colors.grey[50],
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: isSelected ? _accentColor : Colors.grey[300]!,
-                          width: isSelected ? 2 : 1,
-                        ),
-                        boxShadow: isSelected
-                            ? [
-                                BoxShadow(
-                                  color: _accentColor.withOpacity(0.3),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ]
-                            : [],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isFormValid =
+        _nameController.text.isNotEmpty &&
+        _selectedGender != null &&
+        _selectedClass != null &&
+        _selectedInterests.isNotEmpty &&
+        _selectedLearningStyle != null;
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: _backgroundColor,
+        appBar: AppBar(
+          backgroundColor: _accentColor, // شريط علوي باللون البرتقالي المطلق
+          elevation: 0,
+          title: Text(
+            'جهّز تجربتك',
+            style: TextStyle(
+              fontFamily: _fontFamily,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.white,
+            ),
+          ),
+          // centerTitle: true,
+          // bottom: PreferredSize(
+          //   preferredSize: const Size.fromHeight(4.0),
+          //   child: Container(
+          //     height: 4.0,
+          //     decoration: BoxDecoration(
+          //       gradient:
+          //           _primaryGradient, // خط متدرج أسفل حافة الـ AppBar للربط البصري
+          //     ),
+          //   ),
+          // ),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'اختيارات بسيطة تجعل EduMind أقرب لك',
+                style: TextStyle(
+                  fontFamily: _fontFamily,
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // ================== أولاً: قسم المعلومات الأساسية ==================
+              Card(
+                elevation: 0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  //side: BorderSide(color: Colors.grey[300]!, width: 1.5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionHeader(
+                        'المعلومات الأساسية',
+                        'الاسم، الجنس والصف الدراسي العلمي',
+                        Icons.badge_outlined,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _interests[index]['icon']!,
-                            style: const TextStyle(fontSize: 22),
+                      const SizedBox(height: 25),
+
+                      // حقل إدخال الاسم
+                      Text(
+                        'اسمك الكريم',
+                        style: TextStyle(
+                          fontFamily: _fontFamily,
+                          fontWeight: FontWeight.bold,
+                          color: _textDarkColor,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _nameController,
+                        style: TextStyle(fontFamily: _fontFamily, fontSize: 15),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                          hintText: 'اكتب اسمك هنا   ...',
+                          hintStyle: TextStyle(
+                            fontFamily: _fontFamily,
+                            color: Colors.grey[400],
+                            fontSize: 14,
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _interests[index]['label']!,
-                            style: TextStyle(
-                              fontFamily: 'Cairo',
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              color: isSelected ? _accentColor : Colors.black87,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: Colors.grey[300]!,
+                              width: 1.5,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: _accentColor,
+                              width: 2.0,
+                            ),
+                          ),
+                          prefixIcon: ShaderMask(
+                            shaderCallback: (bounds) =>
+                                _primaryGradient.createShader(bounds),
+                            child: Icon(
+                              Icons.alternate_email_rounded,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // حقل تحديد الجنس
+                      Text(
+                        'أنت:',
+                        style: TextStyle(
+                          fontFamily: _fontFamily,
+                          fontWeight: FontWeight.bold,
+                          color: _textDarkColor,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildGenderCard(
+                              label: 'ذكر',
+                              icon: Icons.male_rounded,
+                              isSelected: _selectedGender == 'ذكر',
+                              onTap: () =>
+                                  setState(() => _selectedGender = 'ذكر'),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildGenderCard(
+                              label: 'أنثى',
+                              icon: Icons.female_rounded,
+                              isSelected: _selectedGender == 'أنثى',
+                              onTap: () =>
+                                  setState(() => _selectedGender = 'أنثى'),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
+
+                      const SizedBox(height: 20),
+
+                      // حقل تحديد الصف الدراسي
+                      Text(
+                        'صفّك الدراسي',
+                        style: TextStyle(
+                          fontFamily: _fontFamily,
+                          fontWeight: FontWeight.bold,
+                          color: _textDarkColor,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        value: _selectedClass,
+                        style: TextStyle(
+                          fontFamily: _fontFamily,
+                          color: _textDarkColor,
+                          fontSize: 15,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: Colors.grey[300]!,
+                              width: 1.5,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: _primaryColor,
+                              width: 2.0,
+                            ),
+                          ),
+                          prefixIcon: ShaderMask(
+                            shaderCallback: (bounds) =>
+                                _primaryGradient.createShader(bounds),
+                            child: Icon(
+                              Icons.school_rounded,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        hint: Text(
+                          'اختر المرحلة الدراسية الحالية',
+                          style: TextStyle(
+                            fontFamily: _fontFamily,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                        items: _classes
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c,
+                                child: Text(
+                                  'الصف $c',
+                                  style: TextStyle(fontFamily: _fontFamily),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (val) =>
+                            setState(() => _selectedClass = val),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // ================== ثانياً: قسم الاهتمامات ==================
+              Card(
+                elevation: 0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  //  side: BorderSide(color: Colors.grey[300]!, width: 1.5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionHeader(
+                        'قسم الاهتمامات',
+                        'شو الأشياء التي تهمك؟ (اختر 1 أو 2 فقط)',
+                        Icons.rocket_launch_outlined,
+                      ),
+                      const SizedBox(height: 20),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 2.3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                        itemCount: _interests.length,
+                        itemBuilder: (context, index) {
+                          final isSelected = _selectedInterests.contains(index);
+                          return InkWell(
+                            onTap: () => _toggleInterest(index),
+                            borderRadius: BorderRadius.circular(16),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              decoration: BoxDecoration(
+                                gradient: isSelected
+                                    ? _lightSelectedGradient
+                                    : null,
+                                color: isSelected ? null : Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? _accentColor
+                                      : Colors.grey[300]!,
+                                  width: isSelected ? 1.5 : 1.5,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _interests[index]['icon']!,
+                                    style: const TextStyle(fontSize: 22),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _interests[index]['label']!,
+                                    style: TextStyle(
+                                      fontFamily: _fontFamily,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.w500,
+                                      color: isSelected
+                                          ? _accentColor
+                                          : _textDarkColor,
+                                      fontSize: 13.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // ================== ثالثاً: قسم طريقة التعلم ==================
+              Card(
+                elevation: 0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  // side: BorderSide(color: Colors.grey[300]!, width: 1.5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionHeader(
+                        'قسم طريقة التعلم',
+                        'عندما تكون الفكرة صعبة، ما الذي يساعدك أكثر؟',
+                        Icons.psychology_outlined,
+                      ),
+                      const SizedBox(height: 12),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _learningStyles.length,
+                        itemBuilder: (context, index) {
+                          final isSelected = _selectedLearningStyle == index;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: InkWell(
+                              onTap: () => setState(
+                                () => _selectedLearningStyle = index,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  gradient: isSelected
+                                      ? _lightSelectedGradient
+                                      : null,
+                                  color: isSelected ? null : Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? _primaryColor
+                                        : Colors.grey[300]!,
+                                    width: isSelected ? 2.0 : 1.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 35,
+                                      height: 35,
+                                      decoration: BoxDecoration(
+                                        gradient: isSelected
+                                            ? _primaryGradient
+                                            : null,
+                                        color: isSelected
+                                            ? null
+                                            : Colors.grey[300],
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: TextStyle(
+                                            fontFamily: _numberFont,
+                                            fontWeight: FontWeight.bold,
+                                            color: isSelected
+                                                ? Colors.white
+                                                : Colors.grey[700],
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 14),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _learningStyles[index]['title']!,
+                                            style: TextStyle(
+                                              fontFamily: _fontFamily,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: isSelected
+                                                  ? _primaryColor
+                                                  : _textDarkColor,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            _learningStyles[index]['desc']!,
+                                            style: TextStyle(
+                                              fontFamily: _fontFamily,
+                                              fontSize: 12,
+                                              color: Colors.grey[600],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _learningStyles[index]['icon']!,
+                                      style: const TextStyle(fontSize: 26),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 35),
 
-              // الخطوة 3: أسلوب التعلم
-              const Text(
-                'كيف بتحب تتعلم؟',
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 15),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _learningStyles.length,
-                itemBuilder: (context, index) {
-                  final isSelected = _selectedLearningStyle == index;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          _selectedLearningStyle = index;
-                        });
-                      },
-                      borderRadius: BorderRadius.circular(12),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? _primaryColor.withOpacity(0.08)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isSelected
-                                ? _primaryColor
-                                : Colors.grey[300]!,
-                            width: isSelected ? 2 : 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              isSelected
-                                  ? Icons.radio_button_checked
-                                  : Icons.radio_button_off,
-                              color: isSelected ? _primaryColor : Colors.grey,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              _learningStyles[index],
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontSize: 16,
-                                fontWeight: isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: isSelected
-                                    ? _primaryColor
-                                    : Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 40),
-
-              // زر الحفظ والاستمرار
+              // ================== زر تابع السادة (بدون تدرج) ==================
               Center(
-                child: SizedBox(
+                child: Container(
                   width: double.infinity,
                   height: 55,
-                  child: ElevatedButton(
-                    onPressed:
-                        (_selectedInterests.isNotEmpty &&
-                            _selectedLearningStyle != null &&
-                            _nameController.text.isNotEmpty)
-                        ? () {
-                            Navigator.pushReplacement<void, void>(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
-                          }
-                        : null, // يبقى الزر معطلاً حتى تُعبأ البيانات الأساسية لضمان تفاعل صحيح
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _primaryColor,
-                      disabledBackgroundColor: Colors.grey[300],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  decoration: BoxDecoration(
+                    color: _accentColor, // تم استبدال التدرج بلون برتقالي سادة
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _accentColor.withOpacity(
+                          0.3,
+                        ), // تعديل لون الظل ليناسب اللون البرتقالي
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
                       ),
-                      elevation: 3,
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      print("الاسم: ${_nameController.text}");
+                      print("الجنس: $_selectedGender");
+                      print("الصف: $_selectedClass");
+                      print("الاهتمامات: $_selectedInterests");
+                      print("أسلوب التعلم: $_selectedLearningStyle");
+
+                      await _saveProfileData();
+                      if (!mounted) return;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ThemeSelectionScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors
+                          .transparent, // نتركه شفافاً ليظهر لون الحاوية (Container) بالأسفل
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                     ),
-                    child: const Text(
-                      'تأكيد وإنشاء الحساب',
+                    child: Text(
+                      'تابع',
                       style: TextStyle(
-                        fontFamily: 'Cairo',
+                        fontFamily: _fontFamily,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -336,8 +676,56 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 15),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenderCard({
+    required String label,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          gradient: isSelected ? _lightSelectedGradient : null,
+          color: isSelected ? null : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          // هنا تم دمج الحدود مع الخلفية المتدرجة للحصول على تطابق 100%
+          border: Border.all(
+            color: isSelected
+                ? _primaryColor.withOpacity(0.7)
+                : Colors.grey[300]!,
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.center, // محاذاة سنتر للطرفين بالتساوي
+          children: [
+            Icon(
+              isSelected ? icon : Icons.radio_button_off,
+              color: isSelected ? _primaryColor : Colors.grey[500],
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: _fontFamily,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: isSelected ? _primaryColor : _textDarkColor,
+              ),
+            ),
+          ],
         ),
       ),
     );
