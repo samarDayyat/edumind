@@ -1,3 +1,4 @@
+import 'package:edumind/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -142,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Icon(Icons.stars, color: cs.secondary, size: 24),
                 const SizedBox(width: 8),
                 Text(
-                  "المستوى 3",
+                  AppLocalizations.of(context)!.translate('level 3'),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -271,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _buildPathLine(isRight: false),
         _buildPathStep(
           stageNum: "١",
-          title: "البداية السحرية",
+          title: 'magic_start',
           isLocked: false,
           isCompleted: true,
           alignment: Alignment.centerRight,

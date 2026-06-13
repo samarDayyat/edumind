@@ -4,10 +4,21 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'onboarding_screen.dart';
 
+// 1. استيراد الملفات الجديدة لإدارة اللغة والترجمة
+// (تأكد من تعديل المسارات بناءً على أسماء ملفاتك)
+import 'language_provider.dart';
+import 'app_localizations.dart';
+
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    // استخدام MultiProvider لإدارة الـ Theme والـ Language معاً
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(
+          create: (context) => LanguageProvider(),
+        ), // إضافة مزود اللغة
+      ],
       child: const EduMindApp(),
     ),
   );
@@ -98,18 +109,31 @@ class EduMindApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // استدعاء الـ Providers للاستماع للتغييرات في الثيم واللغة
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return MaterialApp(
       title: 'EduMind',
       debugShowCheckedModeBanner: false,
-      theme: themeProvider.themeData,
-      localizationsDelegates: const [
+      theme: themeProvider.themeData, // الثيم الخاص بك
+      // 2. ربط اللغة الحالية المحددة من قبل الطالب بالتطبيق
+      locale: languageProvider.currentLocale,
+
+      // 3. إضافة الـ Delegates للترجمة متضمنة الـ AppLocalizations الخاص بك
+      localizationsDelegates: [
+        AppLocalizations.delegate, // ملف الترجمة الخاص بك لتغيير النصوص برمجياً
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en'), Locale('ar')],
+
+      // 4. تحديد اللغات التي يدعمها التطبيق بالكامل
+      supportedLocales: const [
+        Locale('ar'), // العربية
+        Locale('en'), // الإنجليزية
+      ],
+
       home: const OnboardingScreen(),
     );
   }

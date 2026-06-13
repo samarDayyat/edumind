@@ -1,3 +1,4 @@
+import 'package:edumind/languageswitchertile.dart';
 import 'package:edumind/profilesetup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -230,20 +231,7 @@ class OnboardingScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'تطبيق OpenMind لتحقيق أفضل إنجاز',
-                                      style: t.textTheme.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: cs.onSurfaceVariant,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    const Text('🐝'),
-                                  ],
-                                ),
+                                child: LanguageSwitcherTile(),
                               ),
                               const SizedBox(height: 20),
                               _AnimatedCta(
