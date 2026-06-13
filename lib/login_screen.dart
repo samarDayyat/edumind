@@ -93,7 +93,7 @@ class LoginScreen extends StatelessWidget {
                             top: 0,
                             child:
                                 Image.asset(
-                                      'assets/images/Alkawarizme.png', // مسار صورتك الشفافة
+                                      'assets/images/ope.png', // مسار صورتك الشفافة
                                       height: 185,
                                       fit: BoxFit.contain,
                                     )

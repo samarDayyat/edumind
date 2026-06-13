@@ -81,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
                                 alpha: 0.2,
                               ),
                               child: const Text(
-                                '🧙',
+                                '🐝',
                                 style: TextStyle(fontSize: 30),
                               ),
                             ),

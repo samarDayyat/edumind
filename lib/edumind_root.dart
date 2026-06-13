@@ -1,3 +1,4 @@
+import 'about_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
@@ -37,7 +38,7 @@ class _EduMindRootState extends State<EduMindRoot> {
           ),
           IndexedStack(
             index: _index,
-            children: const [HomeScreen(), ProfileScreen()],
+            children: const [HomeScreen(), ProfileScreen(), AboutScreen()],
           ),
         ],
       ),
@@ -70,6 +71,11 @@ class _EduMindRootState extends State<EduMindRoot> {
                 icon: Icon(Icons.person_outline_rounded),
                 selectedIcon: Icon(Icons.person_rounded),
                 label: 'Profile',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.info_outline_rounded),
+                selectedIcon: Icon(Icons.info_rounded),
+                label: 'About',
               ),
             ],
           ),

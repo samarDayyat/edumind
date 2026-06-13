@@ -262,7 +262,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
                       // حقل إدخال الاسم
                       Text(
-                        'اسمك الكريم',
+                        'اسمك',
                         style: TextStyle(
                           fontFamily: _fontFamily,
                           fontWeight: FontWeight.bold,
@@ -310,7 +310,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
                       // حقل تحديد الجنس
                       Text(
-                        'أنت:',
+                        'أنت',
                         style: TextStyle(
                           fontFamily: _fontFamily,
                           fontWeight: FontWeight.bold,

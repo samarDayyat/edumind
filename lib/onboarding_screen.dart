@@ -160,31 +160,10 @@ class OnboardingScreen extends StatelessWidget {
                               //     ),
                               //   ),
                               // ),
-                              Container(
-                                width: 200,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF3F2B66),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: const Color(0xFFF1C40F),
-                                    width: 4,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(
-                                        0xFFF1C40F,
-                                      ).withOpacity(0.5),
-                                      blurRadius: 30,
-                                      spreadRadius: 5,
-                                    ),
-                                  ],
-                                ),
-                                child: ClipOval(
-                                  child: Image.asset(
-                                    "assets/images/Alkawarizme.png",
-                                    fit: BoxFit.cover,
-                                  ),
+                              ClipOval(
+                                child: Image.asset(
+                                  "assets/images/ope.png",
+                                  fit: BoxFit.cover,
                                 ),
                               ).animate().scale(
                                 duration: 800.ms,
@@ -262,7 +241,7 @@ class OnboardingScreen extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 10),
-                                    const Text('🏆'),
+                                    const Text('🐝'),
                                   ],
                                 ),
                               ),
